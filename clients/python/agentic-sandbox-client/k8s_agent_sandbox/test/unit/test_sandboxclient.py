@@ -236,6 +236,15 @@ class TestSandboxClient(unittest.TestCase):
 
         automatic.terminate.assert_called_once()
 
+    def test_context_manager_deletes_attached_claim(self):
+        self.mock_k8s_helper.resolve_sandbox_name.return_value = "resolved-id"
+        self.mock_k8s_helper.get_sandbox.return_value = {"metadata": {}}
+
+        with self.client:
+            attached = self.client.get_sandbox("claim", "ns")
+
+        attached.terminate.assert_called_once()
+
     @patch('uuid.uuid4')
     def test_create_sandbox_with_labels(self, mock_uuid):
         mock_uuid.return_value.hex = '1234abcd'

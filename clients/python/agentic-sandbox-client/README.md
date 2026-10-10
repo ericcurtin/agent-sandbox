@@ -164,7 +164,9 @@ finally:
 ```
 
 `SandboxClient` is also a context manager. On exit it deletes the sandboxes it
-created, so the `try`/`finally` above is not needed:
+tracks, including ones attached with `get_sandbox()`, so the `try`/`finally`
+above is not needed. Claims created with an explicit `claim_name` are
+caller-owned and are only disconnected, not deleted:
 
 ```python
 with SandboxClient(connection_config=SandboxLocalTunnelConnectionConfig()) as client:
